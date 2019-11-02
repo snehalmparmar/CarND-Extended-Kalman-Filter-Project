@@ -30,21 +30,23 @@ void KalmanFilter::Predict() {
   MatrixXd Ft = F_.transpose();
   P_ = F_*P_*Ft + Q_;
 }
-
-void KalmanFilter::Update(const VectorXd &z) {
-  /**
-   * TODO: update the state by using Kalman Filter equations
-   */
-  VectorXd y = z - H_*x_;
+void KalmanFilter::MesurementUpdate(const VectorXd &y) {
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_*P_*Ht + R_;
   MatrixXd Si = S.inverse();
   MatrixXd K = P_*Ht*Si;
   long x_size = x_.size();
-  long y_size = y.size();
-  MatrixXd I = MatrixXd :: Identity(x_size, y_size);
+  //long y_size = y.size();
+  MatrixXd I = MatrixXd :: Identity(x_size, x_size);
   x_ = x_ + K*y;
   P_ = (I - K*H_)*P_;  
+}
+void KalmanFilter::Update(const VectorXd &z) {
+  /**
+   * TODO: update the state by using Kalman Filter equations
+   */
+  VectorXd y = z - H_*x_;
+  MesurementUpdate(y);
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -64,13 +66,5 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   hx << rho, phi, rho_dot;
   VectorXd y = z - hx;
   y[1] = atan2(sin(y[1]), cos(y[1]));
-  MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_*P_*Ht + R_;
-  MatrixXd Si = S.inverse();
-  MatrixXd K = P_*Ht*Si;
-  long x_size = x_.size();
-  long y_size = y.size();
-  MatrixXd I = MatrixXd :: Identity(x_size, y_size);
-  x_ = x_ + K*y;
-  P_ = (I - K*H_)*P_;  
+  MesurementUpdate(y);
 }

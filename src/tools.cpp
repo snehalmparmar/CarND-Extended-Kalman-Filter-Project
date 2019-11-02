@@ -40,22 +40,22 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   return RMSE;  
 }
 
-MatrixXd Tools::CalculateJacobian(const VectorXd& x_) {
+MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   /**
    * TODO:
    * Calculate a Jacobian here.
    */
-  float d1 = sqrt(x_(0)*x_(0) + x_(1)*x_(1));
-  float el00 = x_(0)/d1;
-  float el01 = x_(1)/d1;
+  float d1 = sqrt(x_state(0)*x_state(0) + x_state(1)*x_state(1));
+  float el00 = x_state(0)/d1;
+  float el01 = x_state(1)/d1;
   float el02 = 0.0;
   float el03 = 0.0;
-  float el10 = -x_(1)/(d1*d1);
-  float el11 = x_(0)/(d1*d1);
+  float el10 = -x_state(1)/(d1*d1);
+  float el11 = x_state(0)/(d1*d1);
   float el12 = 0.0;
   float el13 = 0.0;
-  float el20 = (x_(1)*(x_(2)*x_(1) - x_(3)*x_(0))) / d1*d1*d1;
-  float el21 = -x_(0)*el20/x_(1);
+  float el20 = (x_state(1)*(x_state(2)*x_state(1) - x_state(3)*x_state(0))) / d1*d1*d1;
+  float el21 = -x_state(0)*el20/x_state(1);
   float el22 = el00;
   float el23 = el01;
   MatrixXd Hj(3,4);

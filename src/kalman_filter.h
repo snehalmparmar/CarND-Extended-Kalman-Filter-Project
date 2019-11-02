@@ -35,6 +35,12 @@ class KalmanFilter {
   void Predict();
 
   /**
+   * Updates the state after computing y with Update or UpdateEKF methods
+   * @param y The difference between measurement and prediction
+   */
+  void MesurementUpdate(const Eigen::VectorXd &y);
+
+  /**
    * Updates the state by using standard Kalman Filter equations
    * @param z The measurement at k+1
    */
